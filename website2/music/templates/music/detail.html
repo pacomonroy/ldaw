@@ -1,0 +1,55 @@
+<!-- Loads the path to static files -->
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'music/style.css' %}">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+
+        <!-- Header -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'music:index' %}"> Django Music App: PACO</a>
+        </div>
+
+        <!-- Items -->
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="">
+                    <a href="{% url 'music:index' %}" title="">
+                        <span class="glyphicon glyphicon-cd" arid-hidden="true"></span> &nbsp; Albums
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</nav>
+
+<img src="{{album.album_art}}" alt="album_art" style="width:200px">
+
+<h2>{{ album.album_title }}</h2>
+<h3>{{ album.artist }}</h3>
+
+{% if error_message %}
+    <p><strong>{{error_message}}</strong></p>
+{% endif %}
+
+<form action="{% url 'music:favourite' album.id %}" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    {% for song in album.song_set.all %}
+        <label for="song {{ forloop.counter }}"><input type="radio" id="song{{ forloop.counter }}" name="song" value="{{ song.id }}">
+        {{song.song_title}}
+        {% if song.is_fav %}
+        <img src="https://cdn4.iconfinder.com/data/icons/Sizicons/16x16/star_blue.png" alt="fav_star">
+            {% endif %}
+        </label> </br>
+    {% endfor %}
+</form>
